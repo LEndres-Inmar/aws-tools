@@ -22,11 +22,20 @@ sts_client = session.client('sts')
 org_client = session.client('organizations')
 
 
+
+ 
+
 '''
 Alright... so without specifying an account, it runs off the access keys and secrets you give it. Neat.
 
 Inmar Consolidated -> assume roll?
 '''
+
+
+
+
+
+
 
 
 
@@ -168,22 +177,44 @@ def zones(account):
     response = client.list_hosted_zones()
 
     for zone in response['HostedZones']:
-        pprint.pp(zone['Id'])
+        print(f"\t{zone['Name']} -> {zone['Id']}")
+    print("\n")
 
+
+def get_account_info(account_name):
+    '''To retrieve only a specific AWS account (based on the account name or account ID)
+    using AWS Organizations, you can filter the results after calling the list_accounts
+    API, as AWS Organizations does not support filtering by account name directly in the
+    API request itself.'''
+
+    accounts_paginator = org_client.get_paginator('list_accounts')
+    accounts_page_iterator = accounts_paginator.paginate()
+
+    for page in accounts_page_iterator:  
+        for account in page['Accounts']:
+            if account['Name'] == account_name:
+                print(f"Account: {account['Name']}, ID: {account['Id']}")
+                return account
 
 
 
 
 if __name__ == '__main__':
-    # specific aws accounts
-    #grocery_ecommerce_accounts = ['inmar-eretail-deploy','inmar-eretail-log'] #,'inmargrocerydev','inmargroceryprod']
+    # whitespace
+    print('\n')
+    # We really don't need to get the accounts, we already have them by name
+    accounts = ['inmar-eretail-deploy', 'inmargrocerydev']
 
-    #get_all_hosted_zone_ids()
-    #get_routes(grocery_ecommerce_accounts)
-    accounts = get_accounts()
-    print(accounts[1]['Id'])
 
-    zones(accounts[1])
+    for account in accounts:
+        account_details = get_account_info(account)
+        zones(account_details)
+        #print(get_account_info(account)['Id'])
+
+
+    #print(accounts[1]['Id'])
+
+    #zones(accounts[1])
 
     '''for account in accounts:
         print(account['Id'])
