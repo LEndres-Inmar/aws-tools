@@ -91,4 +91,4 @@ def list_ec2_instances():
 
 
 instances = list_ec2_instances()
-print(instances)
+#print(instances)
