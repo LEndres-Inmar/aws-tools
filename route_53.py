@@ -167,7 +167,8 @@ def zones(account):
     
     response = client.list_hosted_zones()
 
-    pprint.pp(response)
+    for zone in response['HostedZones']:
+        pprint.pp(zone['Id'])
 
 
 
