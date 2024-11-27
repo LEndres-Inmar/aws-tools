@@ -17,7 +17,7 @@ us_regions = ["us-east-1","us-east-2","us-west-1","us-west-2"]
 session = boto3.session.Session(aws_access_key_id=access_key_id, aws_secret_access_key=secret_access_key, aws_session_token=session_token, region_name='us-east-1')
 
 
-route53_client = session.client('route53')
+#route53_client = session.client('route53')
 sts_client = session.client('sts')
 org_client = session.client('organizations')
 
@@ -96,10 +96,28 @@ def get_hosted_zone_ids():
 
 
 
-def get_routes_from_zone(zone_id):
+def get_routes_from_zone(account_id, zone_id):
+    assume_role_arn = "arn:aws:iam::" + account_id + ":role/" + assumeRoleName
+    assumedRoleObject = sts_client.assume_role(RoleArn=assume_role_arn, RoleSessionName="OrgAssumeRole")
+    
+    credentials = assumedRoleObject['Credentials']
+
+    route53_client = boto3.client('route53',
+        aws_access_key_id=credentials['AccessKeyId'],
+        aws_secret_access_key=credentials['SecretAccessKey'],
+        aws_session_token=credentials['SessionToken'])
+    
+
+    
+    pprint.pp(zone_id)
+
+    # clean up the string
+    zone_id = zone_id[12:]
+    print(zone_id)
+
     for zone in zones:
         # List the record sets in the specified hosted zone
-        response = route53_client.list_resource_record_sets(HostedZoneId="Z2J5S9MTWWRUXF")
+        response = route53_client.list_resource_record_sets(HostedZoneId=zone_id)
 
         a_records = []
         cname_records = []
@@ -163,7 +181,8 @@ if __name__ == '__main__':
     # whitespace
     print('\n')
     # We really don't need to get the accounts, we already have them by name
-    accounts = ['inmar-eretail-deploy', 'inmargrocerydev']
+    # 4 accounts
+    accounts = ['inmar-eretail-deploy'] #, 'inmar-eretail-log', 'inmargrocerydev', 'inmargroceryprod']
 
 
     for account in accounts:
@@ -172,7 +191,7 @@ if __name__ == '__main__':
 
         # loop through each zone
         for zone in zones:
-            get_routes_from_zone(zone['Id'])
+            get_routes_from_zone(account_details['Id'], zone['Id'])
         
         #for zone_group in account_details
         #get_zones_from_account(account_details)
