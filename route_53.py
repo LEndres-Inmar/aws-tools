@@ -97,6 +97,7 @@ def get_hosted_zone_ids():
 
 
 def get_routes_from_zone(account_id, zone_id):
+    print(account_id)
     assume_role_arn = "arn:aws:iam::" + account_id + ":role/" + assumeRoleName
     assumedRoleObject = sts_client.assume_role(RoleArn=assume_role_arn, RoleSessionName="OrgAssumeRole")
     
@@ -113,7 +114,6 @@ def get_routes_from_zone(account_id, zone_id):
 
     # clean up the string
     zone_id = zone_id[12:]
-    print(zone_id)
 
     for zone in zones:
         # List the record sets in the specified hosted zone
@@ -125,11 +125,12 @@ def get_routes_from_zone(account_id, zone_id):
         # Loop through the record sets and filter A and CNAME records
         for record in response['ResourceRecordSets']:
             if record['Type'] == 'A':
-                a_records.append(record)
+                a_records.append(['A', record['Name']])
             elif record['Type'] == 'CNAME':
-                cname_records.append(record)
+                cname_records.append(['CNAME', record['Name']])
 
         pprint.pp(a_records)
+        pprint.pp(cname_records)
         return a_records, cname_records
 
 
@@ -182,7 +183,7 @@ if __name__ == '__main__':
     print('\n')
     # We really don't need to get the accounts, we already have them by name
     # 4 accounts
-    accounts = ['inmar-eretail-deploy'] #, 'inmar-eretail-log', 'inmargrocerydev', 'inmargroceryprod']
+    accounts = ['inmar-eretail-deploy', 'inmar-eretail-log', 'inmargrocerydev', 'inmargroceryprod']
 
 
     for account in accounts:
