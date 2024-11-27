@@ -23,7 +23,7 @@ org_client = session.client('organizations')
 
 
 
- 
+master_records = {'A':[], 'CNAME':[]}
 
 
 
@@ -97,7 +97,7 @@ def get_hosted_zone_ids():
 
 
 def get_routes_from_zone(account_id, zone_id):
-    print(account_id)
+    #print(account_id)
     assume_role_arn = "arn:aws:iam::" + account_id + ":role/" + assumeRoleName
     assumedRoleObject = sts_client.assume_role(RoleArn=assume_role_arn, RoleSessionName="OrgAssumeRole")
     
@@ -110,7 +110,7 @@ def get_routes_from_zone(account_id, zone_id):
     
 
     
-    pprint.pp(zone_id)
+    #pprint.pp(zone_id)
 
     # clean up the string
     zone_id = zone_id[12:]
@@ -125,13 +125,14 @@ def get_routes_from_zone(account_id, zone_id):
         # Loop through the record sets and filter A and CNAME records
         for record in response['ResourceRecordSets']:
             if record['Type'] == 'A':
-                a_records.append(['A', record['Name']])
+                a_records.append(record['Name'])
             elif record['Type'] == 'CNAME':
-                cname_records.append(['CNAME', record['Name']])
+                cname_records.append(record['Name'])
 
-        pprint.pp(a_records)
-        pprint.pp(cname_records)
-        return a_records, cname_records
+        #pprint.pp(a_records)
+        #pprint.pp(cname_records)
+        return {'A':a_records, 'CNAME':cname_records}
+        #return a_records, cname_records
 
 
 
@@ -192,7 +193,17 @@ if __name__ == '__main__':
 
         # loop through each zone
         for zone in zones:
-            get_routes_from_zone(account_details['Id'], zone['Id'])
-        
+            record_maps = get_routes_from_zone(account_details['Id'], zone['Id'])
+
+            if record_maps != {}:
+                for a in record_maps['A']:
+                    print('A -> '+a)
+                for a in record_maps['CNAME']:
+                    print('CNAME -> '+a)
+
+                    #print( record_maps['A'][a])
+                    #if a[0] == 'A':
+                    #    print(a[1])
+
         #for zone_group in account_details
         #get_zones_from_account(account_details)
