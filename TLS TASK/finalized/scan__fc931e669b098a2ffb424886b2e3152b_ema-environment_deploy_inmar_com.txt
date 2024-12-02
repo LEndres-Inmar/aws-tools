@@ -1,0 +1,1 @@
+Error running testssl.sh on _fc931e669b098a2ffb424886b2e3152b.ema-environment.deploy.inmar.com: [1;35mFatal error: non-empty "scan_{sanitized_url}.html" exists. Either use "--append" or (re)move it[m

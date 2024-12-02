@@ -153,8 +153,8 @@ def get_zones_from_account_id(account_id):
     response = client.list_hosted_zones()
 
     for zone in response['HostedZones']:
-        print(f"\t{zone['Name']} -> {zone['Id']}")
-    print("\n")
+        pass #print(f"\t{zone['Name']} -> {zone['Id']}")
+    #print("\n")
 
     return response['HostedZones']
 
@@ -197,9 +197,11 @@ if __name__ == '__main__':
 
             if record_maps != {}:
                 for a in record_maps['A']:
-                    print('A -> '+a)
+                    print(a)
+                    #print('A -> '+a)
                 for a in record_maps['CNAME']:
-                    print('CNAME -> '+a)
+                    print(a)
+                    #print('CNAME -> '+a)
 
                     #print( record_maps['A'][a])
                     #if a[0] == 'A':

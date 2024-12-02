@@ -1,0 +1,1 @@
+Error running testssl.sh on _249278762b74948dc05a0e60d7bf4647.logs.logging.inmar.com: [1;35mFatal error: non-empty "scan_{sanitized_url}.html" exists. Either use "--append" or (re)move it[m

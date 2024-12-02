@@ -1,0 +1,1 @@
+Error running testssl.sh on _b498acc017632cbf3d8a68396b16781c.korner-shoppe.com: [1;35mFatal error: non-empty "scan_{sanitized_url}.html" exists. Either use "--append" or (re)move it[m

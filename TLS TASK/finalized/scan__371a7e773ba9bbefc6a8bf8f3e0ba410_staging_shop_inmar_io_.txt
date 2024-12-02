@@ -1,0 +1,1 @@
+Error running testssl.sh on _371a7e773ba9bbefc6a8bf8f3e0ba410.staging.shop.inmar.io.: [1;35mFatal error: non-empty "scan_{sanitized_url}.html" exists. Either use "--append" or (re)move it[m

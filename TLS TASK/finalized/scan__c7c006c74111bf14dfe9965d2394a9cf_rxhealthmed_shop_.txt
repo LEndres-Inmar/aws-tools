@@ -1,0 +1,1 @@
+Error running testssl.sh on _c7c006c74111bf14dfe9965d2394a9cf.rxhealthmed.shop.: [1;35mFatal error: non-empty "scan_{sanitized_url}.html" exists. Either use "--append" or (re)move it[m
